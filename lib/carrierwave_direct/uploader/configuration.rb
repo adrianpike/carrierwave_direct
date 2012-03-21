@@ -15,6 +15,7 @@ module CarrierWaveDirect
 
         add_config :max_file_size
         add_config :upload_expiration
+        add_config :extra_policy_conditions
         reset_direct_config
       end
 
@@ -29,6 +30,8 @@ module CarrierWaveDirect
 
             config.max_file_size = 5242880
             config.upload_expiration = 36000
+
+            config.extra_policy_conditions = []
           end
         end
       end

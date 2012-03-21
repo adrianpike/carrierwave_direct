@@ -54,6 +54,7 @@ module CarrierWaveDirect
     def policy(options = {})
       options[:expiration] ||= self.class.upload_expiration
       options[:max_file_size] ||= self.class.max_file_size
+      options[:extra_policy_conditions] ||= self.class.extra_policy_conditions
 
       Base64.encode64(
         {
@@ -65,7 +66,7 @@ module CarrierWaveDirect
             {"acl" => acl},
             {"success_action_redirect" => success_action_redirect},
             ["content-length-range", 1, options[:max_file_size]]
-          ]
+          ] << options[:extra_policy_conditions]
         }.to_json
       ).gsub("\n","")
     end

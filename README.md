@@ -274,6 +274,10 @@ As well as the built in validations CarrierWaveDirect provides, some validations
 
       config.max_file_size     = 10.megabytes        # defaults to 5.megabytes
       config.upload_expiration = 1.hour              # defaults to 10.hours
+      config.extra_policy_conditions = [
+        ["starts-with", "$name", ''],
+        {'success_action_status' => '201' }
+      ]
     end
 
 ## Testing with CarrierWaveDirect

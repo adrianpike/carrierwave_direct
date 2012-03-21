@@ -50,6 +50,12 @@ describe CarrierWaveDirect::Uploader do
     end
   end
 
+  describe ".extra_policy_conditions" do
+    it "should be an empty array" do
+      subject.class.extra_policy_conditions == []
+    end
+  end
+
   describe ".max_file_size" do
     it "should be 5 MB" do
       subject.class.max_file_size.should == 5242880
