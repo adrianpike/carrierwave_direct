@@ -16,6 +16,7 @@ module CarrierWaveDirect
         add_config :max_file_size
         add_config :upload_expiration
         add_config :extra_policy_conditions
+        add_config :success_policy
         reset_direct_config
       end
 
@@ -32,6 +33,7 @@ module CarrierWaveDirect
             config.upload_expiration = 36000
 
             config.extra_policy_conditions = []
+            config.success_policy = :redirect
           end
         end
       end

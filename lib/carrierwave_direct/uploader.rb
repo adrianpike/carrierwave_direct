@@ -55,6 +55,9 @@ module CarrierWaveDirect
       options[:expiration] ||= self.class.upload_expiration
       options[:max_file_size] ||= self.class.max_file_size
       options[:extra_policy_conditions] ||= self.class.extra_policy_conditions
+      options[:success_policy] ||= self.class.success_policy
+
+      options[:success_policy] = {"success_action_redirect" => success_action_redirect} if options[:success_policy] == :redirect
 
       Base64.encode64(
         {
@@ -64,9 +67,9 @@ module CarrierWaveDirect
             ["starts-with", "$key", store_dir],
             {"bucket" => fog_directory},
             {"acl" => acl},
-            {"success_action_redirect" => success_action_redirect},
+            options[:success_policy],
             ["content-length-range", 1, options[:max_file_size]]
-          ] << options[:extra_policy_conditions]
+          ] + options[:extra_policy_conditions]
         }.to_json
       ).gsub("\n","")
     end
