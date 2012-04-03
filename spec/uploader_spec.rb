@@ -10,6 +10,7 @@ describe CarrierWaveDirect::Uploader do
     :path => "upload_dir/bliind.exe",
     :path_with_special_chars => "upload_dir/some file & blah.exe",
     :key => "some key",
+    :param_key => "some key?param=testing&furtherparam=magic",
     :guid => "guid",
     :store_dir => "store_dir",
     :extension_regexp => "(avi)",
@@ -264,6 +265,14 @@ describe CarrierWaveDirect::Uploader do
       end
     end
 
+    context "key is set to '#{sample(:param_key)}" do
+      before { subject.key = sample(:param_key) }
+
+      it "should return '#{sample(:key)}'" do
+        subject.filename.should == sample(:key)
+      end
+    end
+
     context "key is not set" do
       context "but the model's remote #{sample(:mounted_as)} url is: '#{sample(:file_url)}'" do
 
@@ -290,20 +299,20 @@ describe CarrierWaveDirect::Uploader do
           mounted_subject.filename
         end
       end
-      
+
       context "and the model's remote #{sample(:mounted_as)} url has whitespace in it" do
         before do
           mounted_model.stub(
             "remote_#{mounted_subject.mounted_as}_url"
           ).and_return("http://anyurl.com/any_path/video_dir/filename 2.avi")
         end
-        
+
         it "should be sanitized (whitespace replaced with _)" do
           mounted_subject.filename
           mounted_subject.key.should =~ /filename_2.avi$/
         end
       end
-      
+
       context "and the model's remote #{sample(:mounted_as)} url is blank" do
         before do
           mounted_model.stub(

@@ -94,6 +94,7 @@ module CarrierWaveDirect
         remote_url ? key_from_file(CarrierWave::SanitizedFile.new(remote_url).filename) : return
       end
 
+      key_path = key.match(/^(.*?)(\?.*)?$/)[1].split("/")
       key_path = key.split("/")
       filename_parts = []
       filename_parts.unshift(key_path.pop)
