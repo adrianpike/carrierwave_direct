@@ -48,7 +48,7 @@ module CarrierWaveDirect
     end
 
     def acl
-      s3_access_policy.to_s.gsub('_', '-')
+      fog_public ? 'public-read' : 'private'
     end
 
     def policy(options = {})
@@ -91,7 +91,7 @@ module CarrierWaveDirect
       unless has_key?
         # Use the attached models remote url to generate a new key otherwise return nil
         remote_url = model.send("remote_#{mounted_as}_url")
-        remote_url ? key_from_file(remote_url.split("/").pop) : return
+        remote_url ? key_from_file(CarrierWave::SanitizedFile.new(remote_url).filename) : return
       end
 
       key_path = key.split("/")

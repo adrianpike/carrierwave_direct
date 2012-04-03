@@ -290,7 +290,20 @@ describe CarrierWaveDirect::Uploader do
           mounted_subject.filename
         end
       end
-
+      
+      context "and the model's remote #{sample(:mounted_as)} url has whitespace in it" do
+        before do
+          mounted_model.stub(
+            "remote_#{mounted_subject.mounted_as}_url"
+          ).and_return("http://anyurl.com/any_path/video_dir/filename 2.avi")
+        end
+        
+        it "should be sanitized (whitespace replaced with _)" do
+          mounted_subject.filename
+          mounted_subject.key.should =~ /filename_2.avi$/
+        end
+      end
+      
       context "and the model's remote #{sample(:mounted_as)} url is blank" do
         before do
           mounted_model.stub(
@@ -306,8 +319,8 @@ describe CarrierWaveDirect::Uploader do
   end
 
   describe "#acl" do
-    it "should return the sanitized s3 access policy" do
-      subject.acl.should == subject.s3_access_policy.to_s.gsub("_", "-")
+    it "should return the correct s3 access policy" do
+      subject.acl.should == (subject.fog_public ? 'public-read' : 'private')
     end
   end
 
