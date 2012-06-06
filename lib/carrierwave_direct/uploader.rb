@@ -91,7 +91,11 @@ module CarrierWaveDirect
       unless has_key?
         # Use the attached models remote url to generate a new key otherwise return nil
         remote_url = model.send("remote_#{mounted_as}_url")
-        remote_url ? key_from_file(CarrierWave::SanitizedFile.new(remote_url.match(/^(.*?)(\?.*)?$/)[1]).filename) : return
+        if remote_url
+          sanitized_path = key_from_file(CGI::unescape(remote_url.match(/^(.*?)(\?.*)?$/)[1]))
+        else
+          return
+        end
       end
 
       key_path = key.split("/")
