@@ -92,7 +92,10 @@ module CarrierWaveDirect
         # Use the attached models remote url to generate a new key otherwise return nil
         remote_url = model.send("remote_#{mounted_as}_url")
         if remote_url
-          sanitized_path = key_from_file(CGI::unescape(remote_url.match(/^(.*?)(\?.*)?$/)[1]))
+          # Few things here:
+          # - We need to run it through CW::SanitizedFile to strip the host, and get rid of evil things(tm)
+          # - We need to strip out any query params before we hit CW::SanitizedFile
+          sanitized_path = key_from_file(CarrierWave::SanitizedFile.new(CGI::unescape(remote_url.match(/^(.*?)(\?.*)?$/)[1])).filename)
         else
           return
         end
