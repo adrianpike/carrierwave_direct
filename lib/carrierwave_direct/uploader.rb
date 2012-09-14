@@ -106,7 +106,6 @@ module CarrierWaveDirect
       filename_parts.unshift(key_path.pop)
       unique_key = key_path.pop
       filename_parts.unshift(unique_key) if unique_key
-      p filename_parts.join("/")
       filename_parts.join("/")
     end
 
