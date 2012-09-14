@@ -95,7 +95,7 @@ module CarrierWaveDirect
           # Few things here:
           # - We need to run it through CW::SanitizedFile to strip the host, and get rid of evil things(tm)
           # - We need to strip out any query params before we hit CW::SanitizedFile
-          sanitized_path = key_from_file(CarrierWave::SanitizedFile.new(CGI::unescape(remote_url.match(/^(.*?)(\?.*)?$/)[1])).filename)
+          key_from_file!(CarrierWave::SanitizedFile.new(CGI::unescape(remote_url.match(/^(.*?)(\?.*)?$/)[1])).original_filename)
         else
           return
         end
@@ -106,6 +106,7 @@ module CarrierWaveDirect
       filename_parts.unshift(key_path.pop)
       unique_key = key_path.pop
       filename_parts.unshift(unique_key) if unique_key
+      p filename_parts.join("/")
       filename_parts.join("/")
     end
 
@@ -124,7 +125,7 @@ module CarrierWaveDirect
 
     private
 
-    def key_from_file(fname)
+    def key_from_file!(fname)
       new_key_parts = key.split("/")
       new_key_parts.pop
       new_key_parts << fname
